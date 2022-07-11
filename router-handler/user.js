@@ -10,7 +10,7 @@ exports.reguser = (req, res) => {
     'select * from ev_users where username=?',
     [userInfo.username],
     (err, results) => {
-      if (err) return res.cc(1)
+      if (err) return res.cc(err)
       if (results.length > 0) return res.send('用户名已存在')
       db.query(
         'insert into ev_users set ?',
@@ -19,7 +19,7 @@ exports.reguser = (req, res) => {
           password: bcrypt.hashSync(userInfo.password, 10)
         },
         function (err, results) {
-          if (err) return res.cc(1)
+          if (err) return res.cc(err)
           return res.send({ status: 0, message: '注册成功！' })
         }
       )
