@@ -1,6 +1,9 @@
 const e = require('express')
-const db = require('./../db/index')
 const bcrypt = require('bcrypt')
+
+const db = require('../db/index')
+const jwt= require('jsonwebtoken')
+const config = require('../config')
 exports.reguser = (req, res) => {
   const userInfo = req.body
   if (!userInfo.username || !userInfo.password) {
@@ -27,4 +30,27 @@ exports.reguser = (req, res) => {
   )
 }
 
-exports.login = (req, res) => {}
+exports.login = (req, res) => {
+  const userInfo = req.body
+  db.query('select * from ev_users where username=?',userInfo.username,(err,results)=>{
+    //数据库查询错误
+    if(err){
+      res.cc(err)
+    }
+
+    //密码错误
+    const compareResult = bcrypt.compareSync(userInfo.password,results[0].password)
+    if(!compareResult){
+      res.cc('密码错误，请重试')
+    }
+
+    //正常查出数据后的处理(记得加user_pic字段)
+    const user = {...results[0],password:'', user_pic:''}//此处是es6高级语法
+    const tokenStr = jwt.sign(user,config.jwtSecretKey,{expiresIn:'10h'})
+    res.send({
+      status:0,
+      message:'登录成功',
+      token:'Bearer '+tokenStr
+    })
+  })
+}
