@@ -34,6 +34,7 @@ app.use('/my', userInfo)
 
 //错误级别中间件一定要在所有的路由之后注册
 app.use(function (err, req, res, next) {
+  // return res.send(err)
   if (err instanceof joi.ValidationError) {
     return res.cc(err.message)
   }
