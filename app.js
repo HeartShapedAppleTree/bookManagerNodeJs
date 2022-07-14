@@ -1,11 +1,13 @@
 const express = require('express')
 const cors = require('cors')
+const joi = require('joi')
+const expressJoi = require('@escook/express-joi')
+const { expressjwt } = require('express-jwt')
+
+const config = require('./config')
 const user = require('./router/user')
 const userInfo = require('./router/userInfo')
-const expressJoi = require('@escook/express-joi')
-const joi = require('joi')
-const { expressjwt } = require('express-jwt')
-const config = require('./config')
+const artcate = require('./router/artcate')
 
 const app = express()
 
@@ -31,7 +33,7 @@ app.use(function (req, res, next) {
 //使用路由
 app.use('/api', user)
 app.use('/my', userInfo)
-
+app.use('/my/article', artcate)
 //错误级别中间件一定要在所有的路由之后注册
 app.use(function (err, req, res, next) {
   // return res.send(err)
