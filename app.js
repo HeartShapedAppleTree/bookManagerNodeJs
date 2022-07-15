@@ -8,6 +8,7 @@ const config = require('./config')
 const user = require('./router/user')
 const userInfo = require('./router/userInfo')
 const artcate = require('./router/artcate')
+const article = require('./router/article')
 
 const app = express()
 
@@ -34,6 +35,11 @@ app.use(function (req, res, next) {
 app.use('/api', user)
 app.use('/my', userInfo)
 app.use('/my/article', artcate)
+app.use('/my/article', article)
+
+//托管静态资源
+app.use('/uploads', express.static('./uploads'))
+
 //错误级别中间件一定要在所有的路由之后注册
 app.use(function (err, req, res, next) {
   // return res.send(err)

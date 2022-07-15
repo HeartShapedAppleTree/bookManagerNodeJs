@@ -49,3 +49,23 @@ exports.getArticleCateById = function (req, res) {
     }
   )
 }
+
+exports.updateArticleCateById = function (req, res) {
+  db.query(
+    'select * from ev_article_cate where id<>? and (name=? or alias = ?) ',
+    [req.body.id, req.body.name, req.body.alias],
+    (err, results) => {
+      if (err) return res.cc(err)
+      if (results.length > 0) return res.cc('名称或别名被占用，请修改')
+      db.query(
+        'update ev_article_cate set ? where id =?',
+        [req.body, req.body.id],
+        (err, results) => {
+          if (err) return res.cc(err)
+          if (results.affectedRows !== 1) return res.cc('文章分类修改失败')
+          res.cc('文章分类修改成功', 0)
+        }
+      )
+    }
+  )
+}
