@@ -13,3 +13,10 @@ exports.add_article_cate = {
     alias
   }
 }
+
+exports.get_articel_cate_by_id = {
+  id: joi
+    .string()
+    .min(1)
+    .required()
+}

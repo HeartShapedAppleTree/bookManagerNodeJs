@@ -1,4 +1,5 @@
 const db = require('../db')
+const router = require('../router/artcate')
 
 exports.getArticleCates = function (req, res) {
   db.query(
@@ -29,6 +30,22 @@ exports.addArticleCate = function (req, res) {
           res.cc('新增成功！', 0)
         }
       )
+    }
+  )
+}
+exports.getArticleCateById = function (req, res) {
+  console.log(req.params)
+  db.query(
+    'select * from ev_article_cate where id=?',
+    req.params.id,
+    (err, results) => {
+      if (err) return res.cc(err)
+      if (results.length !== 1) return res.cc('查询失败')
+      res.send({
+        status: 0,
+        message: '查询文章分类成功',
+        data: results[0]
+      })
     }
   )
 }
